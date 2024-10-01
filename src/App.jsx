@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import Descriptions from './components/Descriptions/Descriptions'
+import Description from './components/Description/Description'
 import Options from './components/Options/Options'
 import Feedback from './components/Feedback/Feedback';
+import Notification from './components/Notification/Notification';
 
 function App() {
   const [good, setGood] = useState(() => {
@@ -39,16 +40,30 @@ function App() {
     setNeutral(0);
   };
 
+  const total = good + neutral + bad;
+  const totalFeedback = total > 0 ? Math.round((good / total) * 100) : 0;
+
   return (
     <div>
-      <Descriptions />
-      <Options 
+      <Description />
+      <Options
         onGood={handleGood}
         onNeutral={handleNeutral}
         onBad={handleBad}
         onReset={handleReset}
+        total={total}
       />
-      <Feedback good={good} neutral={neutral} bad={bad}/>
+      {total > 0 ? (
+        <Feedback
+          good={good}
+          neutral={neutral}
+          bad={bad}
+          total={total}
+          totalFeedback={totalFeedback}
+        />
+      ) : (
+        <Notification />
+      )}
     </div>
   );
 }
